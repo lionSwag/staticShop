@@ -2,7 +2,7 @@
 // 쇼핑몰 기본 데이터 (상품, 카테고리)
 
 // ==================== 상품 데이터 ====================
-export const PRODUCTS_DATA = [
+const PRODUCTS_DATA = [
     {
         id: 1,
         name: "프리미엄 스마트워치",
