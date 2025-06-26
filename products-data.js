@@ -150,7 +150,7 @@ const PRODUCTS_DATA = [
 ];
 
 // ==================== 카테고리 데이터 ====================
-export const CATEGORIES = [
+const CATEGORIES = [
     { id: "all", name: "전체", icon: "🛍️" },
     { id: "electronics", name: "전자제품", icon: "📱" },
     { id: "computer", name: "컴퓨터", icon: "💻" }
