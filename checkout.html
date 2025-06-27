@@ -1144,27 +1144,18 @@
 
         // ==================== 주문 완료 ====================
         function completeOrder(orderInfo) {
-            hideLoading();
-            updateSteps(3); // 완료 단계로 이동
-
-            // 주문 번호 생성
             const orderNumber = 'ORD' + Date.now().toString().slice(-8);
             
-            // 주문 정보를 로컬스토리지에 저장
+            // 주문 정보 저장
             const orders = JSON.parse(localStorage.getItem('orders')) || [];
             orders.push({
                 orderNumber: orderNumber,
                 ...orderInfo
             });
             localStorage.setItem('orders', JSON.stringify(orders));
-
-            // 성공 메시지 표시
-            alert(`주문이 완료되었습니다!\n\n주문번호: ${orderNumber}\n결제금액: ${orderInfo.payment.amount.toLocaleString()}원\n\n주문 내역은 마이페이지에서 확인하실 수 있습니다.`);
-
-            // 메인 페이지로 이동
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 1000);
+        
+            // 주문 완료 페이지로 이동
+            window.location.href = `order-complete.html?orderNumber=${orderNumber}`;
         }
 
         // ==================== 단계 업데이트 ====================
