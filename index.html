@@ -356,13 +356,11 @@
     <script>
     // Cart functionality
         let cart = [];
-        let displayedProducts = 6; // Initially show 6 products
+        let displayedProducts = 7; // Initially show 6 products
 
         // Load featured products on page load
         document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
-                loadFeaturedProducts();
-            }, 1000); // Simulate loading time
+             loadFeaturedProducts();
         });
 
         function loadFeaturedProducts() {
