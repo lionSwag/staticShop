@@ -146,6 +146,18 @@ const PRODUCTS_DATA = [
         featured: false,
         rating: 4.3,
         reviews: 34
+    },
+    {
+        id: 13,
+        name: "라코스테 기본 폴로티",
+        price: 75000,
+        category: "의류",
+        image: "👕",
+        description: "기본 라코스테 폴로티입니다. 다양하게 맞춰 입을 수 있습니다.",
+        stock: 45,
+        featured: true,
+        rating: 4.3,
+        reviews: 34
     }
 ];
 
