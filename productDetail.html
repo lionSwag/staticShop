@@ -1277,13 +1277,18 @@
         // ==================== 바로 구매 ====================
         function buyNow() {
             if (!currentProduct) return;
-
+        
             const quantity = parseInt($('#quantity').val());
-            const totalPrice = currentProduct.price * quantity;
+            const options = selectedOptions;
             
-            if (confirm(`${currentProduct.name}\n수량: ${quantity}개\n총 금액: ${totalPrice.toLocaleString()}원\n\n바로 구매하시겠습니까?`)) {
-                alert('주문이 완료되었습니다!\n감사합니다.');
-            }
+            // 바로 구매 페이지로 이동
+            const params = new URLSearchParams({
+                productId: currentProduct.id,
+                quantity: quantity,
+                options: JSON.stringify(options)
+            });
+            
+            window.location.href = `checkout.html?${params.toString()}`;
         }
 
         // ==================== 위시리스트 기능 ====================
