@@ -388,12 +388,14 @@
                         <h5 class="product-title">${product.name}</h5>
                         <p class="product-description">${product.description}</p>
                         <div class="product-price">${product.price.toLocaleString()}원</div>
+                    </div>
+                    <div class="card-footer" style="border-top: none;">
                         <button class="btn btn-product" onclick="addToCart(${product.id})">
                             <i class="fas fa-cart-plus me-2"></i>장바구니 담기
                         </button>
                         <button class="btn btn-product" onclick="goToProductDetail(${product.id})">
                             <i class="fas fa-search-plus me-2"></i>제품 상세보기
-                            </button>
+                        </button>
                     </div>
                 </div>
             `;
