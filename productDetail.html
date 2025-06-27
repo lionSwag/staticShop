@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 상세 - Modern Shop</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --accent-color: #fd79a8;
+            --dark-color: #2d3436;
+            --light-color: #ddd6fe;
+            --success-color: #00b894;
+            --warning-color: #fdcb6e;
+            --danger-color: #e17055;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-top: 76px;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-link {
+            color: var(--dark-color) !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color) !important;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb {
+            background: none;
+            margin: 0;
+        }
+
+        .breadcrumb-item a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb-item a:hover {
+            color: white;
+        }
+
+        .breadcrumb-item.active {
+            color: white;
+        }
+
+        /* Product Detail Section */
+        .product-detail-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .product-image-gallery {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .main-product-image {
+            font-size: 8rem;
+            background: linear-gradient(45deg, var(--light-color), var(--secondary-color));
+            border-radius: 15px;
+            padding: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .main-product-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2));
+        }
+
+        .main-product-image:hover {
+            transform: scale(1.05);
+        }
+
+        .image-thumbnails {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .thumbnail {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            background: linear-gradient(45deg, var(--light-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            padding-left: 2rem;
+        }
+
+        .product-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+
+        .product-rating-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .rating-stars {
+            color: var(--warning-color);
+            font-size: 1.2rem;
+        }
+
+        .rating-text {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .product-price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .price-original {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .price-discount {
+            background: var(--danger-color);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .product-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .product-options {
+            margin-bottom: 2rem;
+        }
+
+        .option-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .option-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+
+        .option-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .option-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .option-btn:hover,
+        .option-btn.active {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .quantity-input {
+            display: flex;
+            align-items: center;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .quantity-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .quantity-number {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: white;
+            text-align: center;
+            width: 60px;
+        }
+
+        .stock-info {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-add-cart {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-add-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            color: white;
+        }
+
+        .btn-buy-now {
+            background: linear-gradient(45deg, var(--accent-color), var(--danger-color));
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-buy-now:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            color: white;
+        }
+
+        .btn-wishlist {
+            background: white;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 1rem;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-wishlist:hover,
+        .btn-wishlist.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .product-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: rgba(108, 92, 231, 0.1);
+            border-radius: 10px;
+            color: var(--dark-color);
+        }
+
+        .feature-icon {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        /* Tabs Section */
+        .product-tabs {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid #eee;
+            margin-bottom: 2rem;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: #666;
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+            border-radius: 10px 10px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .tab-content {
+            padding: 1rem 0;
+        }
+
+        /* Reviews */
+        .review-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .review-rating {
+            color: var(--warning-color);
+        }
+
+        .review-date {
+            color: #999;
+            font-size: 0.8rem;
+        }
+
+        /* Related Products */
+        .related-products {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--dark-color);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .related-product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: 100%;
+        }
+
+        .related-product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .related-product-image {
+            height: 150px;
+            background: linear-gradient(45deg, var(--light-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+
+        .related-product-body {
+            padding: 1rem;
+        }
+
+        .related-product-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            height: 2.5rem;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .related-product-price {
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .product-info {
+                padding-left: 0;
+                margin-top: 2rem;
+            }
+
+            .product-title {
+                font-size: 1.5rem;
+            }
+
+            .product-price {
+                font-size: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-wishlist {
+                align-self: center;
+            }
+
+            .main-product-image {
+                font-size: 6rem;
+                padding: 2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-shopping-bag me-2"></i>창환 Shop
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">홈</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="products.html">상품</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">소개</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">문의</a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html" onclick="showCart(); return false;">
+                            <i class="fas fa-shopping-cart me-1"></i>
+                            장바구니 <span class="badge bg-danger" id="cartCount">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">로그인</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">회원가입</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-section">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">홈</a></li>
+                    <li class="breadcrumb-item"><a href="products.html">상품</a></li>
+                    <li class="breadcrumb-item"><span id="breadcrumbCategory">전자제품</span></li>
+                    <li class="breadcrumb-item active" id="breadcrumbProduct">프리미엄 스마트워치</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Product Detail Section -->
+        <div class="product-detail-section">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="product-image-gallery">
+                        <div class="main-product-image" id="mainImage">
+                            📱
+                        </div>
+                        <div class="image-thumbnails">
+                            <div class="thumbnail active" data-image="📱">📱</div>
+                            <div class="thumbnail" data-image="⌚">⌚</div>
+                            <div class="thumbnail" data-image="📟">📟</div>
+                            <div class="thumbnail" data-image="🔋">🔋</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="product-info">
+                        <h1 class="product-title" id="productTitle">프리미엄 스마트워치</h1>
+                        
+                        <div class="product-rating-section">
+                            <div class="rating-stars" id="productRating">
+                                ★★★★★
+                            </div>
+                            <div class="rating-text">
+                                <span id="ratingScore">4.8</span> (리뷰 <span id="reviewCount">127</span>개)
+                            </div>
+                        </div>
+
+                        <div class="product-price">
+                            <span class="price-original" id="originalPrice">399,000원</span>
+                            <span id="currentPrice">299,000원</span>
+                            <span class="price-discount">25% 할인</span>
+                        </div>
+
+                        <p class="product-description" id="productDescription">
+                            최신 기술이 집약된 프리미엄 스마트워치입니다. 건강 관리부터 스마트 알림까지 모든 기능을 제공합니다. 
+                            방수 기능과 긴 배터리 수명을 자랑하며, 세련된 디자인으로 어떤 상황에서도 완벽한 스타일을 연출할 수 있습니다.
+                        </p>
+
+                        <div class="product-features">
+                            <div class="feature-item">
+                                <i class="fas fa-heart feature-icon"></i>
+                                <span>심박수 모니터링</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-tint feature-icon"></i>
+                                <span>방수 기능 (IP68)</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-battery-full feature-icon"></i>
+                                <span>7일 배터리</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-wifi feature-icon"></i>
+                                <span>WiFi + GPS</span>
+                            </div>
+                        </div>
+
+                        <div class="product-options">
+                            <div class="option-group">
+                                <div class="option-label">색상</div>
+                                <div class="option-buttons">
+                                    <button class="option-btn active" data-option="color" data-value="black">블랙</button>
+                                    <button class="option-btn" data-option="color" data-value="white">화이트</button>
+                                    <button class="option-btn" data-option="color" data-value="rose-gold">로즈골드</button>
+                                </div>
+                            </div>
+                            <div class="option-group">
+                                <div class="option-label">밴드 타입</div>
+                                <div class="option-buttons">
+                                    <button class="option-btn active" data-option="band" data-value="sport">스포츠</button>
+                                    <button class="option-btn" data-option="band" data-value="leather">가죽</button>
+                                    <button class="option-btn" data-option="band" data-value="metal">메탈</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quantity-selector">
+                            <div class="option-label">수량</div>
+                            <div class="quantity-input">
+                                <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+                                <input type="number" class="quantity-number" id="quantity" value="1" min="1" max="10">
+                                <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                            </div>
+                            <div class="stock-info">
+                                <i class="fas fa-check-circle me-1"></i>재고 <span id="stockCount">50</span>개
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-add-cart" onclick="addToCart()">
+                                <i class="fas fa-cart-plus me-2"></i>장바구니 담기
+                            </button>
+                            <button class="btn btn-buy-now" onclick="buyNow()">
+                                <i class="fas fa-credit-card me-2"></i>바로 구매
+                            </button>
+                            <button class="btn btn-wishlist" onclick="toggleWishlist()" id="wishlistBtn">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <!-- Products Data -->
+    <script src="products-data.js"></script>
+
+    <script>
+        // ==================== 전역 변수 ====================
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        let currentProduct = null;
+        let selectedOptions = {
+            color: 'black',
+            band: 'sport'
+        };
+
+        // ==================== 초기화 ====================
+        $(document).ready(function() {
+            updateCartCount();
+            loadProduct();
+            initializeEventListeners();
+        });
+
+        // ==================== 상품 로드 ====================
+        function loadProduct() {
+            // URL에서 상품 ID 가져오기 (예: product-detail.html?id=1)
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = parseInt(urlParams.get('id')) || 1; // 기본값은 1
+
+            // PRODUCTS_DATA에서 해당 상품 찾기
+            currentProduct = PRODUCTS_DATA.find(product => product.id === productId);
+            
+            if (!currentProduct) {
+                // 상품을 찾지 못한 경우 첫 번째 상품으로 설정
+                currentProduct = PRODUCTS_DATA[0];
+            }
+
+            renderProduct();
+            loadRelatedProducts();
+            updateProductOptions();
+        }
+
+        // ==================== 상품 렌더링 ====================
+        function renderProduct() {
+            if (!currentProduct) return;
+
+            // 기본 정보 업데이트
+            $('#productTitle').text(currentProduct.name);
+            $('#breadcrumbCategory').text(currentProduct.category);
+            $('#breadcrumbProduct').text(currentProduct.name);
+            $('#productDescription').text(currentProduct.description);
+            $('#currentPrice').text(currentProduct.price.toLocaleString() + '원');
+            $('#stockCount').text(currentProduct.stock);
+            $('#ratingScore').text(currentProduct.rating);
+            $('#reviewCount, #tabReviewCount').text(currentProduct.reviews);
+
+            // 별점 표시
+            const stars = '★'.repeat(Math.floor(currentProduct.rating)) + '☆'.repeat(5-Math.floor(currentProduct.rating));
+            $('#productRating').text(stars);
+
+            // 메인 이미지 업데이트
+            $('#mainImage').text(currentProduct.image);
+
+            // 썸네일 이미지 업데이트 (동일한 이미지로 설정)
+            $('.thumbnail').each(function(index) {
+                $(this).attr('data-image', currentProduct.image).text(currentProduct.image);
+            });
+
+            // 할인가 표시 (원가는 숨김)
+            $('#originalPrice').hide();
+            $('.price-discount').hide();
+
+            // 위시리스트 상태 확인
+            const isInWishlist = wishlist.some(item => item.id === currentProduct.id);
+            updateWishlistButton(isInWishlist);
+
+            // 인기 상품 배지 표시
+            if (currentProduct.featured) {
+                $('.product-title').after('<span class="badge bg-danger ms-2">인기</span>');
+            }
+
+            // 페이지 제목 업데이트
+            document.title = `${currentProduct.name} - Modern Shop`;
+
+            // 상품별 특성에 따른 기능 표시
+            updateProductFeatures();
+        }
+
+        // ==================== 상품별 특성 업데이트 ====================
+        function updateProductFeatures() {
+            let features = [];
+            
+            // 카테고리별 특성 정의
+            switch(currentProduct.category) {
+                case '전자제품':
+                    features = [
+                        { icon: 'fas fa-microchip', text: '최신 기술' },
+                        { icon: 'fas fa-shield-alt', text: 'A/S 보장' },
+                        { icon: 'fas fa-battery-full', text: '오래가는 배터리' },
+                        { icon: 'fas fa-mobile-alt', text: '스마트 연동' }
+                    ];
+                    break;
+                case '의류':
+                    features = [
+                        { icon: 'fas fa-leaf', text: '친환경 소재' },
+                        { icon: 'fas fa-hand-sparkles', text: '부드러운 촉감' },
+                        { icon: 'fas fa-tshirt', text: '편안한 착용감' },
+                        { icon: 'fas fa-palette', text: '다양한 색상' }
+                    ];
+                    break;
+                case '홈&가든':
+                    features = [
+                        { icon: 'fas fa-home', text: '인테리어 효과' },
+                        { icon: 'fas fa-tools', text: '간편한 설치' },
+                        { icon: 'fas fa-recycle', text: '친환경' },
+                        { icon: 'fas fa-medal', text: '고급 소재' }
+                    ];
+                    break;
+                case '스포츠':
+                    features = [
+                        { icon: 'fas fa-dumbbell', text: '운동 효과' },
+                        { icon: 'fas fa-tint', text: '땀 흡수' },
+                        { icon: 'fas fa-running', text: '활동성' },
+                        { icon: 'fas fa-heartbeat', text: '건강 관리' }
+                    ];
+                    break;
+                case '도서':
+                    features = [
+                        { icon: 'fas fa-brain', text: '지식 향상' },
+                        { icon: 'fas fa-bookmark', text: '깊이 있는 내용' },
+                        { icon: 'fas fa-graduation-cap', text: '학습 도움' },
+                        { icon: 'fas fa-star', text: '베스트셀러' }
+                    ];
+                    break;
+                case '뷰티':
+                    features = [
+                        { icon: 'fas fa-heart', text: '피부 개선' },
+                        { icon: 'fas fa-leaf', text: '천연 성분' },
+                        { icon: 'fas fa-magic', text: '즉각 효과' },
+                        { icon: 'fas fa-shield-alt', text: '안전한 성분' }
+                    ];
+                    break;
+                case '식품':
+                    features = [
+                        { icon: 'fas fa-seedling', text: '유기농' },
+                        { icon: 'fas fa-heart', text: '건강 식품' },
+                        { icon: 'fas fa-certificate', text: '인증 제품' },
+                        { icon: 'fas fa-apple-alt', text: '신선한 재료' }
+                    ];
+                    break;
+                default:
+                    features = [
+                        { icon: 'fas fa-check', text: '품질 보장' },
+                        { icon: 'fas fa-truck', text: '빠른 배송' },
+                        { icon: 'fas fa-medal', text: '프리미엄' },
+                        { icon: 'fas fa-thumbs-up', text: '고객 만족' }
+                    ];
+            }
+
+            // 특성 HTML 생성
+            let featuresHTML = '';
+            features.forEach(feature => {
+                featuresHTML += `
+                    <div class="feature-item">
+                        <i class="${feature.icon} feature-icon"></i>
+                        <span>${feature.text}</span>
+                    </div>
+                `;
+            });
+
+            $('.product-features').html(featuresHTML);
+
+            // 상세 정보 탭의 내용도 업데이트
+            updateDetailTab();
+        }
+
+        // ==================== 상세 정보 탭 업데이트 ====================
+        function updateDetailTab() {
+            $('#detailDescription').text(currentProduct.description);
+            $('#detailName').text(currentProduct.name);
+            $('#detailCategory').text(currentProduct.category);
+            $('#detailPrice').text(currentProduct.price.toLocaleString() + '원');
+            $('#detailStock').text(currentProduct.stock + '개');
+            $('#detailRating').text(currentProduct.rating + '/5.0');
+            $('#detailReviews').text(currentProduct.reviews + '개');
+
+            // 카테고리별 상세 특징
+            let detailFeatures = '';
+            switch(currentProduct.category) {
+                case '전자제품':
+                    detailFeatures = `
+                        <ul>
+                            <li>최신 기술 적용</li>
+                            <li>품질 보증서 제공</li>
+                            <li>무료 A/S 1년</li>
+                            <li>사용법 가이드 포함</li>
+                        </ul>
+                    `;
+                    break;
+                case '의류':
+                    detailFeatures = `
+                        <ul>
+                            <li>고급 원단 사용</li>
+                            <li>세탁 방법 안내</li>
+                            <li>사이즈 교환 가능</li>
+                            <li>컬러 옵션 다양</li>
+                        </ul>
+                    `;
+                    break;
+                case '홈&가든':
+                    detailFeatures = `
+                        <ul>
+                            <li>실용적인 디자인</li>
+                            <li>내구성 우수</li>
+                            <li>설치 가이드 제공</li>
+                            <li>인테리어 효과</li>
+                        </ul>
+                    `;
+                    break;
+                case '스포츠':
+                    detailFeatures = `
+                        <ul>
+                            <li>운동 효과 증진</li>
+                            <li>안전성 검증</li>
+                            <li>사용법 동영상 제공</li>
+                            <li>전문가 추천</li>
+                        </ul>
+                    `;
+                    break;
+                case '도서':
+                    detailFeatures = `
+                        <ul>
+                            <li>전문 작가 저술</li>
+                            <li>양질의 내용</li>
+                            <li>독서 가이드 포함</li>
+                            <li>베스트셀러 도서</li>
+                        </ul>
+                    `;
+                    break;
+                case '뷰티':
+                    detailFeatures = `
+                        <ul>
+                            <li>피부 테스트 완료</li>
+                            <li>천연 성분 함유</li>
+                            <li>사용법 가이드</li>
+                            <li>만족도 높은 제품</li>
+                        </ul>
+                    `;
+                    break;
+                case '식품':
+                    detailFeatures = `
+                        <ul>
+                            <li>신선한 재료</li>
+                            <li>영양 성분 풍부</li>
+                            <li>위생적 포장</li>
+                            <li>유통기한 관리</li>
+                        </ul>
+                    `;
+                    break;
+                default:
+                    detailFeatures = `
+                        <ul>
+                            <li>품질 보장</li>
+                            <li>고객 만족</li>
+                            <li>빠른 배송</li>
+                            <li>A/S 지원</li>
+                        </ul>
+                    `;
+            }
+
+            $('#productDetailFeatures').html(detailFeatures);
+        }
+
+        // ==================== 옵션 업데이트 ====================
+        function updateProductOptions() {
+            // 실제 데이터에는 옵션 정보가 없으므로 기본 옵션만 제공
+            const colorOptions = ['블랙', '화이트', '그레이'];
+            const sizeOptions = ['S', 'M', 'L'];
+
+            let colorHTML = '';
+            colorOptions.forEach((color, index) => {
+                colorHTML += `
+                    <button class="option-btn ${index === 0 ? 'active' : ''}" data-option="color" data-value="${color}">
+                        ${color}
+                    </button>
+                `;
+            });
+
+            let sizeHTML = '';
+            if (currentProduct.category === '의류') {
+                sizeOptions.forEach((size, index) => {
+                    sizeHTML += `
+                        <button class="option-btn ${index === 1 ? 'active' : ''}" data-option="size" data-value="${size}">
+                            ${size}
+                        </button>
+                    `;
+                });
+            }
+
+            // 옵션 영역 업데이트
+            let optionsHTML = '';
+            if (colorHTML) {
+                optionsHTML += `
+                    <div class="option-group">
+                        <div class="option-label">색상</div>
+                        <div class="option-buttons">${colorHTML}</div>
+                    </div>
+                `;
+            }
+            if (sizeHTML && currentProduct.category === '의류') {
+                optionsHTML += `
+                    <div class="option-group">
+                        <div class="option-label">사이즈</div>
+                        <div class="option-buttons">${sizeHTML}</div>
+                    </div>
+                `;
+            }
+
+            $('.product-options').html(optionsHTML);
+
+            // 새로 생성된 옵션 버튼에 이벤트 리스너 재연결
+            $('.option-btn').on('click', function() {
+                const optionType = $(this).data('option');
+                const optionValue = $(this).data('value');
+                
+                $(this).siblings().removeClass('active');
+                $(this).addClass('active');
+                
+                selectedOptions[optionType] = optionValue;
+            });
+        }
+
+        // ==================== 관련 상품 로드 ====================
+        function loadRelatedProducts() {
+            if (!currentProduct) return;
+
+            // 같은 카테고리의 다른 상품들 찾기
+            const relatedProducts = PRODUCTS_DATA
+                .filter(product => product.category === currentProduct.category && product.id !== currentProduct.id)
+                .slice(0, 4);
+
+            let html = '';
+            relatedProducts.forEach(product => {
+                html += `
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="related-product-card">
+                            <div class="related-product-image">${product.image}</div>
+                            <div class="related-product-body">
+                                <h6 class="related-product-title">${product.name}</h6>
+                                <div class="related-product-price">${product.price.toLocaleString()}원</div>
+                                <button class="btn btn-sm btn-outline-primary mt-2" onclick="goToProduct(${product.id})">
+                                    상세보기
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            $('#relatedProducts').html(html);
+        }
+
+        // ==================== 이벤트 리스너 초기화 ====================
+        function initializeEventListeners() {
+            // 썸네일 클릭 이벤트
+            $('.thumbnail').on('click', function() {
+                const imageData = $(this).data('image');
+                $('#mainImage').text(imageData);
+                $('.thumbnail').removeClass('active');
+                $(this).addClass('active');
+            });
+
+            // 옵션 선택 이벤트
+            $('.option-btn').on('click', function() {
+                const optionType = $(this).data('option');
+                const optionValue = $(this).data('value');
+                
+                $(this).siblings().removeClass('active');
+                $(this).addClass('active');
+                
+                selectedOptions[optionType] = optionValue;
+            });
+
+            // 수량 입력 이벤트
+            $('#quantity').on('change', function() {
+                const value = parseInt($(this).val());
+                const max = currentProduct ? currentProduct.stock : 10;
+                
+                if (value < 1) $(this).val(1);
+                if (value > max) $(this).val(max);
+            });
+        }
+
+        // ==================== 수량 변경 ====================
+        function changeQuantity(delta) {
+            const quantityInput = $('#quantity');
+            const currentValue = parseInt(quantityInput.val());
+            const newValue = currentValue + delta;
+            const maxStock = currentProduct ? currentProduct.stock : 10;
+            
+            if (newValue >= 1 && newValue <= maxStock) {
+                quantityInput.val(newValue);
+            }
+        }
+
+        // ==================== 장바구니 기능 ====================
+        function addToCart() {
+            if (!currentProduct) return;
+
+            const quantity = parseInt($('#quantity').val());
+            const existingItem = cart.find(item => 
+                item.id === currentProduct.id && 
+                JSON.stringify(item.options) === JSON.stringify(selectedOptions)
+            );
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    ...currentProduct, 
+                    quantity: quantity,
+                    options: {...selectedOptions}
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            showCartNotification(currentProduct.name);
+        }
+
+        function updateCartCount() {
+            const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+            $('#cartCount').text(cartCount);
+        }
+
+        function showCartNotification(productName) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 9999;
+                animation: slideInRight 0.5s ease-out;
+                max-width: 300px;
+            `;
+            
+            notification.innerHTML = `
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>${productName}</strong>이(가) 장바구니에 추가되었습니다!
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.5s ease-out';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 500);
+            }, 3000);
+        }
+
+        // ==================== 바로 구매 ====================
+        function buyNow() {
+            if (!currentProduct) return;
+
+            const quantity = parseInt($('#quantity').val());
+            const totalPrice = currentProduct.price * quantity;
+            
+            if (confirm(`${currentProduct.name}\n수량: ${quantity}개\n총 금액: ${totalPrice.toLocaleString()}원\n\n바로 구매하시겠습니까?`)) {
+                alert('주문이 완료되었습니다!\n감사합니다.');
+            }
+        }
+
+        // ==================== 위시리스트 기능 ====================
+        function toggleWishlist() {
+            if (!currentProduct) return;
+
+            const existingIndex = wishlist.findIndex(item => item.id === currentProduct.id);
+            
+            if (existingIndex > -1) {
+                wishlist.splice(existingIndex, 1);
+                updateWishlistButton(false);
+                showNotification('위시리스트에서 제거되었습니다.');
+            } else {
+                wishlist.push(currentProduct);
+                updateWishlistButton(true);
+                showNotification('위시리스트에 추가되었습니다.');
+            }
+            
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        }
+
+        function updateWishlistButton(isActive) {
+            const btn = $('#wishlistBtn');
+            if (isActive) {
+                btn.addClass('active');
+                btn.find('i').removeClass('far').addClass('fas');
+            } else {
+                btn.removeClass('active');
+                btn.find('i').removeClass('fas').addClass('far');
+            }
+        }
+
+        // ==================== 장바구니 모달 ====================
+        function showCart() {
+            if (cart.length === 0) {
+                alert('장바구니가 비어있습니다.');
+                return;
+            }
+            
+            let cartHTML = '<div style="max-width: 500px; margin: 20px auto; padding: 20px; background: white; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">';
+            cartHTML += '<h3 style="text-align: center; margin-bottom: 20px; color: var(--primary-color);">장바구니</h3>';
+            
+            let total = 0;
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                cartHTML += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee;">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; margin-bottom: 5px;">${item.name}</div>
+                            <div style="font-size: 0.9rem; color: #666;">${item.price.toLocaleString()}원 × ${item.quantity}</div>
+                            ${item.options ? '<div style="font-size: 0.8rem; color: #999;">옵션: ' + Object.values(item.options).join(', ') + '</div>' : ''}
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: bold; color: var(--accent-color); margin-bottom: 5px;">
+                                ${itemTotal.toLocaleString()}원
+                            </div>
+                            <button onclick="removeFromCart(${index})" style="background: #e74c3c; color: white; border: none; border-radius: 5px; padding: 3px 8px; font-size: 0.8rem; cursor: pointer;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            cartHTML += `
+                <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--primary-color);">
+                    <h4 style="color: var(--primary-color); margin-bottom: 20px;">총 금액: ${total.toLocaleString()}원</h4>
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <button onclick="clearCart()" style="background: #95a5a6; color: white; border: none; padding: 12px 20px; border-radius: 25px; font-weight: bold; cursor: pointer;">
+                            전체 삭제
+                        </button>
+                        <button onclick="checkout()" style="background: linear-gradient(45deg, var(--accent-color), var(--primary-color)); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-weight: bold; cursor: pointer;">
+                            주문하기
+                        </button>
+                    </div>
+                </div>
+            `;
+            cartHTML += '</div>';
+            
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                animation: fadeIn 0.3s ease-out;
+            `;
+            overlay.innerHTML = cartHTML;
+            
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    closeCartModal();
+                }
+            });
+            
+            document.body.appendChild(overlay);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            
+            const overlay = document.querySelector('div[style*="position: fixed"][style*="z-index: 10000"]');
+            if (overlay) {
+                document.body.removeChild(overlay);
+            }
+            
+            if (cart.length > 0) {
+                showCart();
+            }
+        }
+
+        function clearCart() {
+            if (confirm('장바구니를 모두 비우시겠습니까?')) {
+                cart = [];
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+                closeCartModal();
+            }
+        }
+
+        function closeCartModal() {
+            const overlay = document.querySelector('div[style*="position: fixed"][style*="z-index: 10000"]');
+            if (overlay) {
+                overlay.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => {
+                    if (document.body.contains(overlay)) {
+                        document.body.removeChild(overlay);
+                    }
+                }, 300);
+            }
+        }
+
+        function checkout() {
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            
+            alert(`주문이 완료되었습니다!\n\n상품 수: ${totalItems}개\n총 금액: ${totalPrice.toLocaleString()}원\n\n감사합니다!`);
+            
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            closeCartModal();
+        }
+
+        // ==================== 유틸리티 함수 ====================
+        function goToProduct(productId) {
+            window.location.href = `product-detail.html?id=${productId}`;
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 9999;
+                animation: slideInRight 0.5s ease-out;
+                max-width: 300px;
+            `;
+            
+            notification.innerHTML = `
+                <i class="fas fa-info-circle me-2"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.5s ease-out';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 500);
+            }, 3000);
+        }
+    </script>
