@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>바로 구매 - Modern Shop</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --accent-color: #fd79a8;
+            --dark-color: #2d3436;
+            --light-color: #ddd6fe;
+            --success-color: #00b894;
+            --warning-color: #fdcb6e;
+            --danger-color: #e17055;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-top: 76px;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-link {
+            color: var(--dark-color) !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color) !important;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb {
+            background: none;
+            margin: 0;
+        }
+
+        .breadcrumb-item a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb-item a:hover {
+            color: white;
+        }
+
+        .breadcrumb-item.active {
+            color: white;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            color: white;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Step Progress */
+        .step-progress {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+
+        .step {
+            background: white;
+            border: 3px solid #e0e0e0;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #999;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .step.completed {
+            background: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+
+        .step-label {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            white-space: nowrap;
+        }
+
+        /* Main Content */
+        .checkout-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .checkout-form {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .order-summary {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(108, 92, 231, 0.25);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .payment-method {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .payment-method:hover,
+        .payment-method.active {
+            border-color: var(--primary-color);
+            background: rgba(108, 92, 231, 0.1);
+        }
+
+        .payment-method i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .payment-method span {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        /* Order Summary */
+        .product-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .product-item:last-child {
+            border-bottom: none;
+        }
+
+        .product-image {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, var(--light-color), var(--secondary-color));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            color: var(--dark-color);
+        }
+
+        .product-options {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.3rem;
+        }
+
+        .product-quantity {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .product-price {
+            font-weight: bold;
+            color: var(--accent-color);
+            text-align: right;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .price-row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--primary-color);
+        }
+
+        .btn-order {
+            background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1.5rem;
+        }
+
+        .btn-order:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            color: white;
+        }
+
+        .btn-order:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Loading */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .loading-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            max-width: 300px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--light-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+
+            .order-summary {
+                position: static;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .steps {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .steps::before {
+                display: none;
+            }
+
+            .step-label {
+                position: static;
+                transform: none;
+                margin-top: 0.5rem;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-shopping-bag me-2"></i>창환 Shop
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">홈</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">상품</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">소개</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">문의</a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">
+                            <i class="fas fa-shopping-cart me-1"></i>
+                            장바구니 <span class="badge bg-danger" id="cartCount">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">로그인</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">회원가입</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-section">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">홈</a></li>
+                    <li class="breadcrumb-item"><a href="products.html">상품</a></li>
+                    <li class="breadcrumb-item"><a href="#" id="breadcrumbProduct">상품 상세</a></li>
+                    <li class="breadcrumb-item active">바로 구매</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1 class="page-title">
+                <i class="fas fa-credit-card me-3"></i>바로 구매
+            </h1>
+            <p class="page-subtitle">안전하고 간편한 결제로 주문을 완료하세요</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Step Progress -->
+        <div class="step-progress">
+            <div class="steps">
+                <div class="step completed">
+                    <i class="fas fa-shopping-cart"></i>
+                    <div class="step-label">상품 선택</div>
+                </div>
+                <div class="step active">
+                    <i class="fas fa-edit"></i>
+                    <div class="step-label">주문 정보</div>
+                </div>
+                <div class="step">
+                    <i class="fas fa-credit-card"></i>
+                    <div class="step-label">결제</div>
+                </div>
+                <div class="step">
+                    <i class="fas fa-check"></i>
+                    <div class="step-label">완료</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="checkout-container">
+            <!-- Checkout Form -->
+            <div class="checkout-form">
+                <!-- 주문자 정보 -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-user"></i>
+                        주문자 정보
+                    </h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">이름 *</label>
+                            <input type="text" class="form-control" id="orderName" placeholder="이름을 입력하세요" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">연락처 *</label>
+                            <input type="tel" class="form-control" id="orderPhone" placeholder="010-0000-0000" required>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label">이메일 *</label>
+                            <input type="email" class="form-control" id="orderEmail" placeholder="example@email.com" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 배송 정보 -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-truck"></i>
+                        배송 정보
+                    </h3>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="sameAsOrderer" checked>
+                            <label class="form-check-label" for="sameAsOrderer">
+                                주문자 정보와 동일
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">받는 분 *</label>
+                            <input type="text" class="form-control" id="receiverName" placeholder="받는 분 이름" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">연락처 *</label>
+                            <input type="tel" class="form-control" id="receiverPhone" placeholder="010-0000-0000" required>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label">주소 *</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="zipcode" placeholder="우편번호" readonly>
+                                <button class="btn btn-outline-primary" type="button" onclick="searchAddress()">
+                                    <i class="fas fa-search"></i> 주소 검색
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <input type="text" class="form-control" id="address" placeholder="기본 주소" readonly required>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <input type="text" class="form-control" id="detailAddress" placeholder="상세 주소를 입력하세요" required>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="form-label">배송 요청사항</label>
+                            <select class="form-control" id="deliveryRequest">
+                                <option value="">배송 요청사항을 선택하세요</option>
+                                <option value="문앞에 놓아주세요">문앞에 놓아주세요</option>
+                                <option value="경비실에 맡겨주세요">경비실에 맡겨주세요</option>
+                                <option value="택배함에 넣어주세요">택배함에 넣어주세요</option>
+                                <option value="직접 받을게요">직접 받을게요</option>
+                                <option value="custom">직접 입력</option>
+                            </select>
+                            <input type="text" class="form-control mt-2" id="customRequest" placeholder="요청사항을 입력하세요" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 결제 정보 -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-credit-card"></i>
+                        결제 방법
+                    </h3>
+                    <div class="payment-methods">
+                        <div class="payment-method active" data-method="card">
+                            <i class="fas fa-credit-card"></i>
+                            <span>신용카드</span>
+                        </div>
+                        <div class="payment-method" data-method="bank">
+                            <i class="fas fa-university"></i>
+                            <span>무통장입금</span>
+                        </div>
+                        <div class="payment-method" data-method="phone">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>핸드폰결제</span>
+                        </div>
+                        <div class="payment-method" data-method="kakao">
+                            <i class="fab fa-kickstarter"></i>
+                            <span>카카오페이</span>
+                        </div>
+                    </div>
+                    
+                    <div id="cardInfo" class="mt-3">
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label class="form-label">카드 번호 *</label>
+                                <input type="text" class="form-control" id="cardNumber" placeholder="0000-0000-0000-0000" maxlength="19">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">유효기간 *</label>
+                                <input type="text" class="form-control" id="cardExpiry" placeholder="MM/YY" maxlength="5">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">CVC *</label>
+                                <input type="text" class="form-control" id="cardCvc" placeholder="000" maxlength="3">
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label">카드 소유자명 *</label>
+                                <input type="text" class="form-control" id="cardHolder" placeholder="카드에 기재된 이름">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="bankInfo" class="mt-3" style="display: none;">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>입금 계좌:</strong> 국민은행 123-456-789012 (주)창환샵<br>
+                            <strong>입금자명:</strong> 주문자명과 동일하게 입금해주세요
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 이용약관 동의 -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-file-contract"></i>
+                        이용약관 동의
+                    </h3>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="agreeAll">
+                        <label class="form-check-label fw-bold" for="agreeAll">
+                            전체 동의
+                        </label>
+                    </div>
+                    <hr>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                        <label class="form-check-label" for="agreeTerms">
+                            [필수] 이용약관 동의
+                        </label>
+                        <a href="#" class="ms-2 text-primary">내용 보기</a>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="agreePrivacy" required>
+                        <label class="form-check-label" for="agreePrivacy">
+                            [필수] 개인정보 수집 및 이용 동의
+                        </label>
+                        <a href="#" class="ms-2 text-primary">내용 보기</a>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="agreeMarketing">
+                        <label class="form-check-label" for="agreeMarketing">
+                            [선택] 마케팅 정보 수신 동의
+                        </label>
+                        <a href="#" class="ms-2 text-primary">내용 보기</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h3 class="section-title">
+                    <i class="fas fa-receipt"></i>
+                    주문 요약
+                </h3>
+                
+                <div id="orderItems">
+                    <!-- 주문 상품이 여기에 표시됩니다 -->
+                </div>
+
+                <div class="mt-3">
+                    <div class="price-row">
+                        <span>상품 금액</span>
+                        <span id="subtotal">0원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>배송비</span>
+                        <span id="shippingFee">무료</span>
+                    </div>
+                    <div class="price-row">
+                        <span>할인</span>
+                        <span id="discount">0원</span>
+                    </div>
+                    <div class="price-row">
+                        <span>최종 결제 금액</span>
+                        <span id="totalAmount">0원</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-order" onclick="processOrder()" id="orderBtn">
+                    <i class="fas fa-lock me-2"></i>
+                    <span id="totalAmountBtn">0원</span> 결제하기
+                </button>
+
+                <div class="mt-3 text-center">
+                    <small class="text-muted">
+                        <i class="fas fa-shield-alt me-1"></i>
+                        안전한 SSL 암호화 결제
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h5>결제 처리 중...</h5>
+            <p class="text-muted mb-0">잠시만 기다려주세요</p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <!-- Products Data -->
+    <script src="products-data.js"></script>
+
+    <script>
+        // ==================== 전역 변수 ====================
+        let selectedPaymentMethod = 'card';
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let orderData = {
+            product: null,
+            quantity: 1,
+            options: {},
+            totalAmount: 0
+        };
+        
+
+        // ==================== 초기화 ====================
+        $(document).ready(function() {
+            updateCartCount();
+            loadOrderData();
+            initializeEventListeners();
+        });
+
+        // ==================== 주문 데이터 로드 ====================
+        function loadOrderData() {
+            // URL 파라미터에서 주문 정보 가져오기
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = parseInt(urlParams.get('productId'));
+            const quantity = parseInt(urlParams.get('quantity')) || 1;
+            const options = urlParams.get('options') ? JSON.parse(decodeURIComponent(urlParams.get('options'))) : {};
+
+            if (productId && PRODUCTS_DATA) {
+                const product = PRODUCTS_DATA.find(p => p.id === productId);
+                if (product) {
+                    orderData = {
+                        product: product,
+                        quantity: quantity,
+                        options: options,
+                        totalAmount: product.price * quantity
+                    };
+
+                    renderOrderSummary();
+                    updateBreadcrumb();
+                } else {
+                    // 상품을 찾을 수 없는 경우
+                    alert('상품 정보를 찾을 수 없습니다.');
+                    window.location.href = 'products.html';
+                }
+            } else {
+                // 파라미터가 없는 경우
+                alert('잘못된 접근입니다.');
+                window.location.href = 'products.html';
+            }
+        }
+
+        // ==================== 주문 요약 렌더링 ====================
+        function renderOrderSummary() {
+            if (!orderData.product) return;
+
+            const product = orderData.product;
+            const quantity = orderData.quantity;
+            const options = orderData.options;
+
+            // 상품 아이템 표시
+            let optionsText = '';
+            if (Object.keys(options).length > 0) {
+                optionsText = Object.entries(options).map(([key, value]) => `${key}: ${value}`).join(', ');
+            }
+
+            const orderItemsHTML = `
+                <div class="product-item">
+                    <div class="product-image">${product.image}</div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        ${optionsText ? `<div class="product-options">${optionsText}</div>` : ''}
+                        <div class="product-quantity">수량: ${quantity}개</div>
+                    </div>
+                    <div class="product-price">${(product.price * quantity).toLocaleString()}원</div>
+                </div>
+            `;
+
+            $('#orderItems').html(orderItemsHTML);
+
+            // 가격 정보 업데이트
+            const subtotal = product.price * quantity;
+            const shippingFee = subtotal >= 50000 ? 0 : 3000;
+            const discount = 0;
+            const totalAmount = subtotal + shippingFee - discount;
+
+            orderData.totalAmount = totalAmount;
+
+            $('#subtotal').text(subtotal.toLocaleString() + '원');
+            $('#shippingFee').text(shippingFee === 0 ? '무료' : shippingFee.toLocaleString() + '원');
+            $('#discount').text(discount.toLocaleString() + '원');
+            $('#totalAmount, #totalAmountBtn').text(totalAmount.toLocaleString() + '원');
+        }
+
+        // ==================== 브레드크럼 업데이트 ====================
+        function updateBreadcrumb() {
+            if (orderData.product) {
+                $('#breadcrumbProduct').text(orderData.product.name);
+            }
+        }
+
+        // ==================== 이벤트 리스너 초기화 ====================
+        function initializeEventListeners() {
+            // 주문자 정보와 동일 체크박스
+            $('#sameAsOrderer').on('change', function() {
+                if (this.checked) {
+                    $('#receiverName').val($('#orderName').val());
+                    $('#receiverPhone').val($('#orderPhone').val());
+                } else {
+                    $('#receiverName').val('');
+                    $('#receiverPhone').val('');
+                }
+            });
+
+            // 주문자 정보 변경시 받는 사람 정보도 업데이트
+            $('#orderName, #orderPhone').on('input', function() {
+                if ($('#sameAsOrderer').is(':checked')) {
+                    $('#receiverName').val($('#orderName').val());
+                    $('#receiverPhone').val($('#orderPhone').val());
+                }
+            });
+
+            // 배송 요청사항 선택
+            $('#deliveryRequest').on('change', function() {
+                if (this.value === 'custom') {
+                    $('#customRequest').show().focus();
+                } else {
+                    $('#customRequest').hide();
+                }
+            });
+
+            // 결제 방법 선택
+            $('.payment-method').on('click', function() {
+                $('.payment-method').removeClass('active');
+                $(this).addClass('active');
+                selectedPaymentMethod = $(this).data('method');
+                
+                // 결제 방법에 따른 입력 폼 표시/숨김
+                $('.payment-method').each(function() {
+                    const method = $(this).data('method');
+                    $(`#${method}Info`).hide();
+                });
+                
+                if (selectedPaymentMethod === 'card') {
+                    $('#cardInfo').show();
+                } else if (selectedPaymentMethod === 'bank') {
+                    $('#bankInfo').show();
+                }
+            });
+
+            // 카드 번호 포맷팅
+            $('#cardNumber').on('input', function() {
+                let value = this.value.replace(/\D/g, '');
+                value = value.replace(/(\d{4})(?=\d)/g, '$1-');
+                this.value = value;
+            });
+
+            // 유효기간 포맷팅
+            $('#cardExpiry').on('input', function() {
+                let value = this.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                }
+                this.value = value;
+            });
+
+            // CVC 숫자만 입력
+            $('#cardCvc').on('input', function() {
+                this.value = this.value.replace(/\D/g, '');
+            });
+
+            // 전체 동의 체크박스
+            $('#agreeAll').on('change', function() {
+                const isChecked = this.checked;
+                $('#agreeTerms, #agreePrivacy, #agreeMarketing').prop('checked', isChecked);
+            });
+
+            // 개별 체크박스 변경시 전체 동의 상태 업데이트
+            $('#agreeTerms, #agreePrivacy, #agreeMarketing').on('change', function() {
+                const allChecked = $('#agreeTerms').is(':checked') && 
+                                 $('#agreePrivacy').is(':checked') && 
+                                 $('#agreeMarketing').is(':checked');
+                $('#agreeAll').prop('checked', allChecked);
+            });
+        }
+
+        // ==================== 주소 검색 ====================
+        function searchAddress() {
+            // 실제 서비스에서는 다음 우편번호 API 등을 사용
+            const addresses = [
+                { zipcode: '06292', address: '서울특별시 강남구 역삼동' },
+                { zipcode: '13529', address: '경기도 성남시 분당구 정자동' },
+                { zipcode: '21388', address: '인천광역시 부평구 부평동' },
+                { zipcode: '48058', address: '부산광역시 해운대구 우동' },
+                { zipcode: '42472', address: '대구광역시 남구 대명동' }
+            ];
+
+            const randomAddress = addresses[Math.floor(Math.random() * addresses.length)];
+            $('#zipcode').val(randomAddress.zipcode);
+            $('#address').val(randomAddress.address);
+            $('#detailAddress').focus();
+
+            showNotification('주소가 검색되었습니다. 상세 주소를 입력해주세요.');
+        }
+
+        // ==================== 폼 유효성 검사 ====================
+        function validateForm() {
+            const required = [
+                { id: 'orderName', name: '주문자 이름' },
+                { id: 'orderPhone', name: '주문자 연락처' },
+                { id: 'orderEmail', name: '이메일' },
+                { id: 'receiverName', name: '받는 분 이름' },
+                { id: 'receiverPhone', name: '받는 분 연락처' },
+                { id: 'zipcode', name: '우편번호' },
+                { id: 'address', name: '주소' },
+                { id: 'detailAddress', name: '상세 주소' }
+            ];
+
+            // 필수 입력값 검사
+            for (let field of required) {
+                const value = $(`#${field.id}`).val().trim();
+                if (!value) {
+                    alert(`${field.name}을(를) 입력해주세요.`);
+                    $(`#${field.id}`).focus();
+                    return false;
+                }
+            }
+
+            // 이메일 유효성 검사
+            const email = $('#orderEmail').val().trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('올바른 이메일 주소를 입력해주세요.');
+                $('#orderEmail').focus();
+                return false;
+            }
+
+            // 연락처 유효성 검사
+            const phoneRegex = /^\d{3}-\d{4}-\d{4}$/;
+            if (!phoneRegex.test($('#orderPhone').val().replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'))) {
+                alert('올바른 연락처를 입력해주세요. (예: 010-1234-5678)');
+                $('#orderPhone').focus();
+                return false;
+            }
+
+            // 결제 정보 검사
+            if (selectedPaymentMethod === 'card') {
+                const cardFields = [
+                    { id: 'cardNumber', name: '카드 번호' },
+                    { id: 'cardExpiry', name: '유효기간' },
+                    { id: 'cardCvc', name: 'CVC' },
+                    { id: 'cardHolder', name: '카드 소유자명' }
+                ];
+
+                for (let field of cardFields) {
+                    const value = $(`#${field.id}`).val().trim();
+                    if (!value) {
+                        alert(`${field.name}을(를) 입력해주세요.`);
+                        $(`#${field.id}`).focus();
+                        return false;
+                    }
+                }
+
+                // 카드 번호 길이 검사
+                if ($('#cardNumber').val().replace(/-/g, '').length !== 16) {
+                    alert('카드 번호를 정확히 입력해주세요.');
+                    $('#cardNumber').focus();
+                    return false;
+                }
+
+                // CVC 길이 검사
+                if ($('#cardCvc').val().length !== 3) {
+                    alert('CVC를 정확히 입력해주세요.');
+                    $('#cardCvc').focus();
+                    return false;
+                }
+            }
+
+            // 필수 약관 동의 검사
+            if (!$('#agreeTerms').is(':checked')) {
+                alert('이용약관에 동의해주세요.');
+                return false;
+            }
+
+            if (!$('#agreePrivacy').is(':checked')) {
+                alert('개인정보 수집 및 이용에 동의해주세요.');
+                return false;
+            }
+
+            return true;
+        }
+
+        // ==================== 주문 처리 ====================
+        function processOrder() {
+            if (!validateForm()) {
+                return;
+            }
+
+            // 결제 처리 시작
+            showLoading();
+            updateSteps(2); // 결제 단계로 이동
+
+            // 주문 데이터 수집
+            const orderInfo = {
+                // 상품 정보
+                product: orderData.product,
+                quantity: orderData.quantity,
+                options: orderData.options,
+                
+                // 주문자 정보
+                orderer: {
+                    name: $('#orderName').val().trim(),
+                    phone: $('#orderPhone').val().trim(),
+                    email: $('#orderEmail').val().trim()
+                },
+                
+                // 배송 정보
+                shipping: {
+                    name: $('#receiverName').val().trim(),
+                    phone: $('#receiverPhone').val().trim(),
+                    zipcode: $('#zipcode').val().trim(),
+                    address: $('#address').val().trim(),
+                    detailAddress: $('#detailAddress').val().trim(),
+                    request: $('#deliveryRequest').val() === 'custom' ? 
+                            $('#customRequest').val().trim() : 
+                            $('#deliveryRequest').val()
+                },
+                
+                // 결제 정보
+                payment: {
+                    method: selectedPaymentMethod,
+                    amount: orderData.totalAmount
+                },
+                
+                // 주문 시간
+                orderDate: new Date().toISOString()
+            };
+
+            // 실제 결제 처리 시뮬레이션 (3초 후 완료)
+            setTimeout(() => {
+                completeOrder(orderInfo);
+            }, 3000);
+        }
+
+        // ==================== 주문 완료 ====================
+        function completeOrder(orderInfo) {
+            hideLoading();
+            updateSteps(3); // 완료 단계로 이동
+
+            // 주문 번호 생성
+            const orderNumber = 'ORD' + Date.now().toString().slice(-8);
+            
+            // 주문 정보를 로컬스토리지에 저장
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.push({
+                orderNumber: orderNumber,
+                ...orderInfo
+            });
+            localStorage.setItem('orders', JSON.stringify(orders));
+
+            // 성공 메시지 표시
+            alert(`주문이 완료되었습니다!\n\n주문번호: ${orderNumber}\n결제금액: ${orderInfo.payment.amount.toLocaleString()}원\n\n주문 내역은 마이페이지에서 확인하실 수 있습니다.`);
+
+            // 메인 페이지로 이동
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+
+        // ==================== 단계 업데이트 ====================
+        function updateSteps(currentStep) {
+            $('.step').removeClass('active completed');
+            
+            for (let i = 1; i <= 4; i++) {
+                const step = $(`.step:nth-child(${i})`);
+                if (i < currentStep) {
+                    step.addClass('completed');
+                } else if (i === currentStep) {
+                    step.addClass('active');
+                }
+            }
+        }
+
+        // ==================== 로딩 표시/숨김 ====================
+        function showLoading() {
+            $('#loadingOverlay').css('display', 'flex');
+            $('#orderBtn').prop('disabled', true);
+        }
+
+        function hideLoading() {
+            $('#loadingOverlay').css('display', 'none');
+            $('#orderBtn').prop('disabled', false);
+        }
+
+        // ==================== 장바구니 카운트 업데이트 ====================
+        function updateCartCount() {
+            const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+            $('#cartCount').text(cartCount);
+        }
+
+        // ==================== 알림 표시 ====================
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 9999;
+                animation: slideInRight 0.5s ease-out;
+                max-width: 300px;
+            `;
+            
+            notification.innerHTML = `
+                <i class="fas fa-info-circle me-2"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.5s ease-out';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 500);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
