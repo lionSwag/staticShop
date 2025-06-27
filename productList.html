@@ -482,61 +482,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-
+    <script src="products-data.js"></script>
+    
     <script>
-        // ==================== 상품 데이터 ====================
-        const PRODUCTS_DATA = [
-            {
-                id: 1, name: "프리미엄 스마트워치", price: 299000, category: "전자제품", image: "📱",
-                description: "최신 기술이 집약된 스마트워치입니다. 건강 관리부터 스마트 알림까지 모든 기능을 제공합니다.",
-                stock: 50, featured: true, rating: 4.8, reviews: 127
-            },
-            {
-                id: 2, name: "무선 블루투스 이어폰", price: 89000, category: "전자제품", image: "🎧",
-                description: "고음질 무선 이어폰으로 완벽한 음질과 편안한 착용감을 제공합니다.",
-                stock: 75, featured: false, rating: 4.5, reviews: 89
-            },
-            {
-                id: 3, name: "프리미엄 백팩", price: 159000, category: "의류", image: "🎒",
-                description: "고급 소재로 제작된 다기능 백팩입니다. 비즈니스와 여행 모두에 적합합니다.",
-                stock: 30, featured: true, rating: 4.7, reviews: 156
-            },
-            {
-                id: 4, name: "홈 카페 머신", price: 450000, category: "홈&가든", image: "☕",
-                description: "집에서 즐기는 카페 품질의 커피. 간편한 조작으로 완벽한 에스프레소를 만들어보세요.",
-                stock: 25, featured: false, rating: 4.6, reviews: 78
-            },
-            {
-                id: 5, name: "요가 매트 세트", price: 79000, category: "스포츠", image: "🧘",
-                description: "친환경 소재의 프리미엄 요가 매트와 액세서리 세트입니다.",
-                stock: 60, featured: false, rating: 4.4, reviews: 203
-            },
-            {
-                id: 6, name: "베스트셀러 소설", price: 15000, category: "도서", image: "📚",
-                description: "올해 가장 화제가 된 베스트셀러 소설. 감동적인 스토리가 당신을 기다립니다.",
-                stock: 100, featured: false, rating: 4.9, reviews: 1247
-            },
-            {
-                id: 7, name: "고급 스킨케어 세트", price: 230000, category: "뷰티", image: "💄",
-                description: "프리미엄 브랜드의 스킨케어 세트로 완벽한 피부 관리를 시작하세요.",
-                stock: 40, featured: true, rating: 4.8, reviews: 92
-            },
-            {
-                id: 8, name: "유기농 꿀", price: 45000, category: "식품", image: "🍯",
-                description: "100% 천연 유기농 꿀로 건강한 단맛을 즐겨보세요.",
-                stock: 80, featured: false, rating: 4.6, reviews: 167
-            },
-            {
-                id: 9, name: "4K 웹캠", price: 180000, category: "전자제품", image: "📹",
-                description: "초고화질 4K 웹캠으로 화상회의와 스트리밍을 완벽하게 지원합니다.",
-                stock: 35, featured: false, rating: 4.5, reviews: 54
-            },
-            {
-                id: 10, name: "레더 지갑", price: 120000, category: "의류", image: "👛",
-                description: "고급 천연 가죽으로 제작된 프리미엄 지갑입니다.",
-                stock: 45, featured: false, rating: 4.7, reviews: 89
-            }
-        ];
 
         // ==================== 전역 변수 ====================
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
